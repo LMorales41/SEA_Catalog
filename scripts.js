@@ -139,8 +139,8 @@ const albumUrls = [
 const tracklistData = [
     ["like_ooh-ahh", "do_it_again", "going_crazy", "truth", "candy_boy", "like_a_fool"],
     ["cheer_up", "precious_love", "touchdown", "tuk_tok", "woohoo", "my_headphones_on"],
-    ["tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
-    ["knock_knock", "tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
+    ["TT", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
+    ["knock_knock", "TT", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
     ["signal", "three_times_a_day", "only_you", "hold_me_tight", "eye_eye_eyes", "someone_like_me"],
     ["likey", "turtle", "missing_u", "wow", "ffw", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
     ["heart_shaker", "merry_&_happy", "likey", "turtle", "missing_u", "wow", "ffw", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
@@ -164,12 +164,14 @@ const tracklistData = [
     ["one_spark", "i_got_you", "rush", "new_new", "bloom", "you_get_me"]
 ];
 
+const headerImageUrl = "https://static.beyondlive.com/contents/5a397f8acce2479c990d3dbaae85fc8f.jpg";
 
 // This is a 2D array of strings (Contains columns as item 0)
 // From item 1 and onward it looks like : [[*Album_Name*, *Year_released*_...],...]
 const data2DArray = csvData.split('\n').map(row => row.split(','));
 let objectArray = createAlbumsArray(data2DArray, tracklistData);
 const albumArray = formatAlbumData(objectArray);
+
 
                         /** END   OF  VARIABLE/DATA   DECLARATIONS**/ 
 
@@ -301,7 +303,7 @@ function showCards() {
     cardContainer.innerHTML = "";
     const templateCard = document.querySelector(".card");
     
-    for (let i = 0; i < 20; i++){
+    for (let i = 0; i < albumArray.length; i++){
         let selectedAlbum = albumArray[i];
 
         // This part of the code doesn't scale very well! After you add your
@@ -310,6 +312,10 @@ function showCards() {
 
         const nextCard = templateCard.cloneNode(true); // Copy the template card
         editCardContent(nextCard, selectedAlbum.album_name, imageURL); // Edit title and image
+        let cardHeight = document.querySelector('.card').height;
+        
+        generateBulletPoints(nextCard, selectedAlbum.tracklist, cardHeight);
+
         cardContainer.appendChild(nextCard); // Add new card to the container
     }
 }
@@ -322,25 +328,76 @@ function editCardContent(card, newTitle, newImageURL) {
 
     const cardImage = card.querySelector("img");
     cardImage.src = newImageURL;
-    cardImage.alt = newTitle + " Poster";
+    cardImage.alt = newTitle + " Album";
 
     // You can use console.log to help you debug!
     // View the output by right clicking on your website,
     // select "Inspect", then click on the "Console" tab
-    console.log("new card:", newTitle, "- html: ", card);
+    // console.log("new card:", newTitle, "- html: ", card);
+    
 }
 
+// Function to generate bullet points
+function generateBulletPoints(card, tracklist, cardHeight) {
+    // Get the ul element where bullet points will be added
+    const bulletList = card.querySelector('#bulletList');
 
-function generateBulletPoints(comments, maxBulletPoints) 
-{
-    // Check if the number of comments is greater than the maximum allowed bullet points
-    if (comments.length > maxBulletPoints) {
-        // Only select the first 'maxBulletPoints' comments
-        comments = comments.slice(0, maxBulletPoints);
-        // Add the message for additional comments
-        comments.push(`... and ${comments.length - maxBulletPoints} more!`);
+    // Clear existing bullet points
+    bulletList.innerHTML = '';
+    //Check for length of array
+    // I want max tracks to show up to be 7 (most albums are length 7)
+    // If it goes over amount, show number of how many tracks are not shown on final bullet point instead
+    let maxTracks = 7;
+    if (tracklist.length > maxTracks)
+    {
+        let tracksLeft = tracklist.length - 5;
+        // Loop through each TV show title
+        for (let i = 0; i < maxTracks-2; i++)
+        {
+            // Create a new li element
+            let listItem = document.createElement('li');
+            
+            // Set the text of the li element to the TV show title
+            listItem.textContent = tracklist[i];
+
+            // Append the li element to the ul element
+            document.querySelector('.bullet-points').style.height = `${cardHeight}px`;
+            bulletList.appendChild(listItem);
+        }
+        
+        // insert and x more statement here
+        // Create a new li element
+        let listItem = document.createElement('li');
+
+        // Set the text of the li element to the TV show title
+        let message = "... and " + tracksLeft + " more!";
+        listItem.textContent = message;
+        document.querySelector('.bullet-points').style.height = `${cardHeight}px`;
+        // Append the li element to the ul element
+        bulletList.appendChild(listItem);
+
+    }
+    else
+    {
+        // Loop through each TV show title
+        for (let i = 0; i < tracklist.length; i++)
+        {
+            // Create a new li element
+            let listItem = document.createElement('li');
+            
+            // Set the text of the li element to the TV show title
+            listItem.textContent = tracklist[i];
+            document.querySelector('.bullet-points').style.height = `${cardHeight}px`;
+            // Append the li element to the ul element
+            bulletList.appendChild(listItem);
+        }
     }
 }
+
+
+
+
+
                             /** END   OF  DISPLAY   FUNCTIONS**/ 
 
                             /** START   OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
