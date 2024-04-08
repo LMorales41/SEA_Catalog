@@ -23,12 +23,51 @@
  * 
  */
 
+// Album class to abstract away each array containing an Album's data into an object
+// Will contain all data for each album, contains data for soloist as well as there are only 2 soloists.
+class Album 
+{
 
+    //basic constructor 
+    constructor()
+    {
+        this.album_name = "";
+        this.year_released = 0;
+        this.no_of_songs = 0;
+        this.order_released = 0;
+        this.single = "";
+        this.solo = "";
+        this.title_track = "";
+        this.soloist = "";
+    }
+
+    //instead fill all variables with the given columns(arrays) from the 2d array
+    create_from_array(array) {
+        this.album_name = array[0];
+        this.year_released = array[1];
+        this.no_of_songs = array[2];
+        this.order_released = array[3];
+        this.single = array[4];
+        this.solo = array[5];
+        this.title_track = array[6];
+        let soloCheck = this.solo;
+        if (soloCheck === 'true') {
+            if (this.album_name === 'zone') {
+                this.soloist = "jihyo";
+            } else {
+                this.soloist = "nayeon";
+            }
+        }
+        else 
+        {
+            this.soloist = "none";
+        }
+    }
+
+}
 
 // To not use API calls or Libraries I have directly loaded this data
 // All data used here was written by me and can be more cleanly viewed seperately in files in this same directory
-
-
 // This will be converted into a 2D array
 const csvData = `album_name,year_released,no_of_songs,order_released,single,solo,title_track
 the_story_begins,2015,6,1,false,false,like_ooh-ahh
@@ -86,116 +125,15 @@ const albumUrls = [
     "https://lv2-cdn.azureedge.net/twice/4b23b71065d448f0813e7fcb62d76bb8-TW-M13-OnlineCover-WithYouth.jpg"
 ];
 
-
-// Album class to abstract away each array containing an Album's data into an object
-// Will contain all data for each album, contains data for soloist as well as there are only 2 soloists.
-class Album 
-{
-
-    //basic constructor 
-    constructor()
-    {
-        this.album_name = "";
-        this.year_released = 0;
-        this.no_of_songs = 0;
-        this.order_released = 0;
-        this.single = "";
-        this.solo = "";
-        this.title_track = "";
-        this.soloist = "";
-    }
-
-    //instead fill all variables with the given columns(arrays) from the 2d array
-    create_from_array(array) {
-        this.album_name = array[0];
-        this.year_released = array[1];
-        this.no_of_songs = array[2];
-        this.order_released = array[3];
-        this.single = array[4];
-        this.solo = array[5];
-        this.title_track = array[6];
-        let soloCheck = this.solo;
-        if (soloCheck === 'true') {
-            if (this.album_name === 'zone') {
-                this.soloist = "jihyo";
-            } else {
-                this.soloist = "nayeon";
-            }
-        }
-        else 
-        {
-            this.soloist = "none";
-        }
-    }
-
-}
-
 // This is a 2D array of strings (Contains columns as item 0)
 // From item 1 and onward it looks like : [[*Album_Name*, *Year_released*_...],...]
 const data2DArray = csvData.split('\n').map(row => row.split(','));
-const objectArray = createAlbumsArray(data2DArray);
+let objectArray = createAlbumsArray(data2DArray);
+const albumArray = formatAlbumData(objectArray);
 
+// These first functions are ones I wrote to help me manipulate data/create my objects
 
-const FRESH_PRINCE_URL = "https://upload.wikimedia.org/wikipedia/en/3/33/Fresh_Prince_S1_DVD.jpg";
-const CURB_POSTER_URL = "https://m.media-amazon.com/images/M/MV5BZDY1ZGM4OGItMWMyNS00MDAyLWE2Y2MtZTFhMTU0MGI5ZDFlXkEyXkFqcGdeQXVyMDc5ODIzMw@@._V1_FMjpg_UX1000_.jpg";
-const EAST_LOS_HIGH_POSTER_URL = "https://static.wikia.nocookie.net/hulu/images/6/64/East_Los_High.jpg";
-
-// This is an array of strings (TV show titles)
-let titles = [
-    "Fresh Prince of Bel Air",
-    "Curb Your Enthusiasm",
-    "East Los High",
-    "My Cat"
-];
-// Your final submission should have much more data than this, and 
-// you should use more than just an array of strings to store it all.
-
-
-// This function adds cards the page to display the data in the array
-function showCards() {
-    const cardContainer = document.getElementById("card-container");
-    cardContainer.innerHTML = "";
-    const templateCard = document.querySelector(".card");
-    
-    // for (let i = 0; i < titles.length; i++) {
-    //     let title = titles[i];
-    for (let i = 0; i < 20; i++){
-        let selectedAlbum = objectArray[i];
-
-        // This part of the code doesn't scale very well! After you add your
-        // own data, you'll need to do something totally different here.
-        let imageURL = albumUrls[i];
-        // if (i == 0) {
-        //     imageURL = albumUrls[i+20];
-        // } else if (i == 1) {
-        //     imageURL = albumUrls[i+20];
-        // } else if (i == 2) {
-        //     imageURL = albumUrls[i+20];
-        // }
-
-        const nextCard = templateCard.cloneNode(true); // Copy the template card
-        editCardContent(nextCard, selectedAlbum.album_name, imageURL); // Edit title and image
-        cardContainer.appendChild(nextCard); // Add new card to the container
-    }
-}
-
-function editCardContent(card, newTitle, newImageURL) {
-    card.style.display = "block";
-
-    const cardHeader = card.querySelector("h2");
-    cardHeader.textContent = newTitle;
-
-    const cardImage = card.querySelector("img");
-    cardImage.src = newImageURL;
-    cardImage.alt = newTitle + " Poster";
-
-    // You can use console.log to help you debug!
-    // View the output by right clicking on your website,
-    // select "Inspect", then click on the "Console" tab
-    console.log("new card:", newTitle, "- html: ", card);
-}
-
-
+// Will instantiate objects and remove the column data from csv
 function createAlbumsArray(discographyData)
 {
     rows = discographyData.length;
@@ -217,6 +155,124 @@ function createAlbumsArray(discographyData)
     }
 
     return albumObjects;
+}
+
+// Should be handed album array (unformatted)
+function formatAlbumData(unformattedAlbumArray)
+{
+    // The strings I need to fix for every album are:
+        // album_name, title_track must become properly formatted (capitalize + remove underscores)
+    for (let i = 0; i < unformattedAlbumArray.length; i++)
+    {
+        let selectedAlbum = unformattedAlbumArray[i];
+        unformattedAlbumArray[i].album_name = fixString(selectedAlbum.album_name);
+        unformattedAlbumArray[i].title_track = fixString(selectedAlbum.title_track);
+    }
+
+    return unformattedAlbumArray;
+}
+
+// This will properly format the string handed to it from a csv file
+function fixString(myString)
+{
+    // Capitalizes first character of each string if it is a letter
+    if (isLetter(myString[0]))
+    {
+        myString = capitalization(myString, 0);
+    }
+    // console.log(myString);
+    let fixedString = myString;
+
+    if (myString.includes("_"))
+    {
+        // Finds all underscores and places their index into an array
+        let posArray = []
+        let i = 0;
+        for (let j = 0; j < myString.length; j++)
+        {
+            i = myString.indexOf('_', i);
+            if (i === -1)
+            {
+                break;
+            }
+            else
+            {
+                posArray.push(i);
+            }
+            i++;
+        }
+
+        console.log(myString);
+        console.log(posArray);
+
+        // Checks array of underscore positions and capitalizes the next character if its a letter
+        if (posArray.length > 0)
+        {
+            for (let i = 0 ; i < posArray.length; i++)
+            {
+                let nextIndex = posArray[i]+1;
+                if (isLetter(myString[nextIndex]) && nextIndex < myString.length)
+                {
+                    myString = capitalization(myString, nextIndex)
+                }
+            }
+        }
+
+        
+        // Replaces all underscores with spaces
+        const re = /_/g;
+        fixedString = myString.replace(re, " ");
+    }
+    return fixedString;
+}
+
+// For fixString
+function isLetter(char) {
+    // Check if the character is a letter (uppercase or lowercase)
+    return (char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z');
+}
+
+// For fixString
+function capitalization (str, index)
+{
+    // Convert the character at the specified index to uppercase
+    return str.substring(0, index) + str.charAt(index).toUpperCase() + str.substring(index + 1);
+
+}
+
+// This function adds cards the page to display the data in the array
+function showCards() {
+    const cardContainer = document.getElementById("card-container");
+    cardContainer.innerHTML = "";
+    const templateCard = document.querySelector(".card");
+    
+    for (let i = 0; i < 20; i++){
+        let selectedAlbum = albumArray[i];
+
+        // This part of the code doesn't scale very well! After you add your
+        // own data, you'll need to do something totally different here.
+        let imageURL = albumUrls[i];
+
+        const nextCard = templateCard.cloneNode(true); // Copy the template card
+        editCardContent(nextCard, selectedAlbum.album_name, imageURL); // Edit title and image
+        cardContainer.appendChild(nextCard); // Add new card to the container
+    }
+}
+
+function editCardContent(card, newTitle, newImageURL) {
+    card.style.display = "block";
+
+    const cardHeader = card.querySelector("h2");
+    cardHeader.textContent = newTitle;  
+
+    const cardImage = card.querySelector("img");
+    cardImage.src = newImageURL;
+    cardImage.alt = newTitle + " Poster";
+
+    // You can use console.log to help you debug!
+    // View the output by right clicking on your website,
+    // select "Inspect", then click on the "Console" tab
+    console.log("new card:", newTitle, "- html: ", card);
 }
 
 
