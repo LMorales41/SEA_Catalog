@@ -142,8 +142,8 @@ const tracklistData = [
     ["tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
     ["knock_knock", "tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
     ["signal", "three_times_a_day", "only_you", "hold_me_tight", "eye_eye_eyes", "someone_like_me"],
-    ["likey", "turtle", "missing_u", "wow", "dwif", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
-    ["heart_shaker", "merry_&_happy", "likey", "turtle", "missing_u", "wow", "dwif", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
+    ["likey", "turtle", "missing_u", "wow", "ffw", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
+    ["heart_shaker", "merry_&_happy", "likey", "turtle", "missing_u", "wow", "ffw", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
     ["what_is_love", "sweet_talker", "HO!", "dejavu", "say_yes"],
     ["dance_the_night_away", "chillax", "shot_thru_the_heart", "what_is_love", "sweet_talker", "HO!", "dejavu", "say_yes"],
     ["yes_or_yes", "say_you_love_me", "lalala", "young_&_wild", "sunset", "after_moon", "BDZ"],
@@ -200,8 +200,6 @@ function createAlbumsArray(discographyData, tracklistData)
         albumObjects.push(currentAlbum);
         j++;
     }
-
-
 
     return albumObjects;
 }
@@ -338,7 +336,6 @@ function editCardContent(card, newTitle, newImageURL) {
         // Will also call the functions here
 // This calls the addCards() function when the page is first loaded
 document.addEventListener("DOMContentLoaded", showCards);
-console.log(albumArray);
 
 
 function quoteAlert() {
