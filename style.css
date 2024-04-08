@@ -7,9 +7,10 @@ body {
 
 
 .main-header {
-    background-image: url('https://static.beyondlive.com/contents/5a397f8acce2479c990d3dbaae85fc8f.jpg');
+    /*background-image: url('https://static.beyondlive.com/contents/5a397f8acce2479c990d3dbaae85fc8f.jpg');
+    background-image: url('https://i.ibb.co/0B211YW/Capture.png');
     background-size: cover; /* Cover the entire element with the background image */
-    background-position: center calc(49% - 200px);
+    /*background-position: center calc(49% - 200px);*/
     padding-bottom: 20px;
 }
 
@@ -19,7 +20,7 @@ body {
     font-size: 13em;
     font-family: "Sans-Serif";
     font-weight: normal;
-    color: rgba(14, 12, 14, 0);
+    color: rgb(0, 0, 0);
 }
 
 #card-container {
@@ -100,6 +101,16 @@ body {
     padding: 10px;
 }
 
+.sorting-tools
+{
+    display:flex;
+    justify-content: center; /* Horizontally center the items */
+    align-items: center; /* Vertically center the items */
+    color: white;
+    height:30px
+
+}
+
 button {
     text-align: center;
     background-color: #666;
@@ -112,4 +123,48 @@ button {
     font-size: 22px;
     cursor: pointer;
     margin: 5px;
+}
+
+/* Style for the media container */
+.media-container {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+/* Style for the YouTube video container */
+.youtube-video {
+    flex: 1;
+    margin-right: 20px;
+    margin-left : 20px;
+}
+
+/* Style for the Spotify playlist container */
+.spotify-playlist {
+    flex: 1;
+}
+
+/* Style for the playlist header */
+.playlist-header {
+    text-align: center;
+    background-color: #0c0b0b; /* Change as needed */
+    padding: 20px;
+    margin-bottom: 20px;
+    color:ghostwhite;
+}
+
+/* Style for the list container */
+.list-container {
+    margin-left: 50px; /* Add some margin to separate from the video */
+    float: left; /* Float the list container to the left */
+    width: calc(100% - 0px); /* Adjust as needed */
+    
+}
+
+/* Style for the list */
+.list-container ul {
+    list-style-type: disc; /* Use disc bullets */
+    padding-left: 20px; /* Add some padding for better readability */
 }

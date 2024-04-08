@@ -164,7 +164,6 @@ const tracklistData = [
     ["one_spark", "i_got_you", "rush", "new_new", "bloom", "you_get_me"]
 ];
 
-const headerImageUrl = "https://static.beyondlive.com/contents/5a397f8acce2479c990d3dbaae85fc8f.jpg";
 
 // This is a 2D array of strings (Contains columns as item 0)
 // From item 1 and onward it looks like : [[*Album_Name*, *Year_released*_...],...]
@@ -305,17 +304,16 @@ function showCards() {
     
     for (let i = 0; i < albumArray.length; i++){
         let selectedAlbum = albumArray[i];
-
-        // This part of the code doesn't scale very well! After you add your
-        // own data, you'll need to do something totally different here.
         let imageURL = albumUrls[i];
 
         const nextCard = templateCard.cloneNode(true); // Copy the template card
         editCardContent(nextCard, selectedAlbum.album_name, imageURL); // Edit title and image
+
+
         let cardHeight = document.querySelector('.card').height;
-        
         generateBulletPoints(nextCard, selectedAlbum.tracklist, cardHeight);
 
+        
         cardContainer.appendChild(nextCard); // Add new card to the container
     }
 }
@@ -417,6 +415,57 @@ function removeLastCard() {
     titles.pop(); // Remove last item in titles array
     showCards(); // Call showCards again to refresh
 }
+
+
+function redirectToNewPage(data) {
+    // Redirect to a new page with dynamic data
+    window.location.href = 'newpage.html?data=' + data;
+}
+
+function generateCardHTML(album) {
+    // Generate HTML content for the new page based on the album data
+    let htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${album.album_name}</title>
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <h1>${album.album_name}</h1>
+            <img src="${album.album_image}" alt="${album.album_name}">
+            <h2>Tracklist</h2>
+            <ul>
+    `;
+
+    // Add each track to the tracklist
+    album.tracklist.forEach(track => {
+        htmlContent += `<li>${track}</li>`;
+    });
+
+    // Close the HTML content
+    htmlContent += `
+            </ul>
+        </body>
+        </html>
+    `;
+
+    return htmlContent;
+}
+
+function createHTMLPage(content) {
+    // Create a new HTML element
+    const pageContainer = document.createElement('div');
+
+    // Set the innerHTML of the element to the generated HTML content
+    pageContainer.innerHTML = content;
+
+    // Append the element to the document body
+    document.body.appendChild(pageContainer);
+}
+
 
                             /** END OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
 
