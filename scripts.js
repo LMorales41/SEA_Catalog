@@ -39,6 +39,7 @@ class Album
         this.solo = "";
         this.title_track = "";
         this.soloist = "";
+        this.tracklist = [];
     }
 
     //instead fill all variables with the given columns(arrays) from the 2d array
@@ -64,6 +65,10 @@ class Album
         }
     }
 
+    setTracklist(array)
+    {
+        this.tracklist = array;
+    }
 }
 
 // To not use API calls or Libraries I have directly loaded this data
@@ -153,6 +158,8 @@ function createAlbumsArray(discographyData)
         // Push the filled album instance into the albums array
         albumObjects.push(currentAlbum);
     }
+
+
 
     return albumObjects;
 }
