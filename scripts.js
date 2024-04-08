@@ -330,12 +330,25 @@ function editCardContent(card, newTitle, newImageURL) {
     console.log("new card:", newTitle, "- html: ", card);
 }
 
+
+function generateBulletPoints(comments, maxBulletPoints) 
+{
+    // Check if the number of comments is greater than the maximum allowed bullet points
+    if (comments.length > maxBulletPoints) {
+        // Only select the first 'maxBulletPoints' comments
+        comments = comments.slice(0, maxBulletPoints);
+        // Add the message for additional comments
+        comments.push(`... and ${comments.length - maxBulletPoints} more!`);
+    }
+}
                             /** END   OF  DISPLAY   FUNCTIONS**/ 
 
                             /** START   OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
         // Will also call the functions here
 // This calls the addCards() function when the page is first loaded
 document.addEventListener("DOMContentLoaded", showCards);
+
+
 
 
 function quoteAlert() {
