@@ -20,6 +20,7 @@ body {
 
 #card-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     margin: 20px;
 }
@@ -46,6 +47,21 @@ body {
 .card img {
     width: 100%;
     height: auto;
+}
+.bullet-points
+{
+    display:none;
+    position:absolute;
+    list-style-type: none;
+    background: white;
+    padding:10px;
+    border: 1px solid black;
+
+}
+
+.card:hover .bullet-points
+{
+    display:block;
 }
 
 .footer {
