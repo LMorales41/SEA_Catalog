@@ -23,6 +23,8 @@
  * 
  */
 
+
+                            /** START OF CLASS DECLARATIONS **/
 // Album class to abstract away each array containing an Album's data into an object
 // Will contain all data for each album, contains data for soloist as well as there are only 2 soloists.
 class Album 
@@ -70,6 +72,9 @@ class Album
         this.tracklist = array;
     }
 }
+                        /** END OF CLASS DECLARATIONS **/
+
+                        /** START   OF  VARIABLE/DATA   DECLARATIONS**/ 
 
 // To not use API calls or Libraries I have directly loaded this data
 // All data used here was written by me and can be more cleanly viewed seperately in files in this same directory
@@ -136,6 +141,10 @@ const data2DArray = csvData.split('\n').map(row => row.split(','));
 let objectArray = createAlbumsArray(data2DArray);
 const albumArray = formatAlbumData(objectArray);
 
+                        /** END   OF  VARIABLE/DATA   DECLARATIONS**/ 
+
+
+                        /** START   OF  VARIABLE/DATA   FUNCTIONS**/ 
 // These first functions are ones I wrote to help me manipulate data/create my objects
 
 // Will instantiate objects and remove the column data from csv
@@ -247,6 +256,13 @@ function capitalization (str, index)
 
 }
 
+                            /** END   OF  VARIABLE/DATA   FUNCTIONS**/ 
+
+
+
+                            /** START   OF  DISPLAY   FUNCTIONS**/ 
+
+                        
 // This function adds cards the page to display the data in the array
 function showCards() {
     const cardContainer = document.getElementById("card-container");
@@ -282,7 +298,10 @@ function editCardContent(card, newTitle, newImageURL) {
     console.log("new card:", newTitle, "- html: ", card);
 }
 
+                            /** END   OF  DISPLAY   FUNCTIONS**/ 
 
+                            /** START   OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
+        // Will also call the functions here
 // This calls the addCards() function when the page is first loaded
 document.addEventListener("DOMContentLoaded", showCards);
 
@@ -298,4 +317,5 @@ function removeLastCard() {
     showCards(); // Call showCards again to refresh
 }
 
+                            /** END OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
 
