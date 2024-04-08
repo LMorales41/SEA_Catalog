@@ -106,7 +106,7 @@ zone,2023,7,3,false,true,killin'_me_good
 i_got_you,2024,1,1,true,false,i_got_you
 with_you-th,2024,6,2,false,false,one_spark`;
 
-// This is an array containing all URLs necessary for my images
+// This is an array containing all URLs necessary for my images, ordered according to the album in twicediscog.csv
 const albumUrls = [
     "https://lv2-cdn.azureedge.net/twice/a68274bbdd254344afaa8ad9c0b5151f-THE_STORY_BEGINS.jpg",
     "https://lv2-cdn.azureedge.net/twice/PAGE_TWO.jpg",
@@ -135,10 +135,40 @@ const albumUrls = [
     "https://lv2-cdn.azureedge.net/twice/4b23b71065d448f0813e7fcb62d76bb8-TW-M13-OnlineCover-WithYouth.jpg"
 ];
 
+// This is the tracklist of each album, ordered according to the album in twicediscog.csv
+const tracklistData = [
+    ["like_ooh-ahh", "do_it_again", "going_crazy", "truth", "candy_boy", "like_a_fool"],
+    ["cheer_up", "precious_love", "touchdown", "tuk_tok", "woohoo", "my_headphones_on"],
+    ["tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
+    ["knock_knock", "tt", "1_to_10", "ponytail", "jelly_jelly", "Pit-a-Pat", "next_page", "one_in_a_million"],
+    ["signal", "three_times_a_day", "only_you", "hold_me_tight", "eye_eye_eyes", "someone_like_me"],
+    ["likey", "turtle", "missing_u", "wow", "dwif", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
+    ["heart_shaker", "merry_&_happy", "likey", "turtle", "missing_u", "wow", "dwif", "ding_dong", "24/7", "look_at_me", "rollin'", "love_line", "don't_give_up", "you_in_my_heart", "jaljayo_good_night"],
+    ["what_is_love", "sweet_talker", "HO!", "dejavu", "say_yes"],
+    ["dance_the_night_away", "chillax", "shot_thru_the_heart", "what_is_love", "sweet_talker", "HO!", "dejavu", "say_yes"],
+    ["yes_or_yes", "say_you_love_me", "lalala", "young_&_wild", "sunset", "after_moon", "BDZ"],
+    ["fancy", "stuck_in_my_head", "girls_like_us", "hot", "turn_it_up", "strawberry"],
+    ["feel_special", "rainbow", "get_loud", "trick_it", "love_foolish", "21:29", "breakthrough_(Korean Version)"],
+    ["more_&_more", "oxygen", "firework", "make_me_go", "shadow", "don't_call_me_again", "sweet_summer_day"],
+    ["i_can't_stop_me", "hell_in_heaven", "up_no_more", "do_what_we_like", "bring_it_back", "believer", "queen", "go_hard", "shot_clock", "handle_it", "depend_on_you", "say_something", "behind_the_mask"],
+    ["cry_for_me"],
+    ["alcohol-free", "first_time", "scandal", "conversation", "baby_blue_love", "SOS"],
+    ["the_feels", "the_feels(Benny Benassi Remix)", "the_feels(The Stereotypes Remix)", "the_feels(YVES V Remix)", "the_feels(Instrumental)", "the_feels(Benny Benassi Remix Extended)", "the_feels(Benny Benassi Remix - Instrumental)", "the_feels(YVES V Remix - Instrumental)", "the_feels(The Stereotypes Remix - Instrumental)"],
+    ["scientist", "moonlight", "icon", "cruel", "real_you", "F.I.L.A(Fall In Love Again)", "last_waltz", "espresso", "rewind", "cactus", "push_&_pull", "hello", "1-3-2", "candy", "the_feels", "scientist(R3HAB Remix)"],
+    ["pop!", "no_problem(Feat. Felix of Stray Kids)", "love_countdown(Feat. Wonstein)", "candyfloss", "all_or_nothing", "happy_birthday_to_you", "sunset"],
+    ["talk_that_talk", "queen_of_hearts", "basics", "trouble", "brave", "gone", "when_we_were_kids"],
+    ["moonlight_sunrise"],
+    ["set_me_free", "moonlight_sunrise", "got_the_thrills", "blame_it_on_me", "wallflower", "crazy_stupid_love", "set_me_free(ENG)"],
+    ["killin'_me_good", "talkin'_about_it(Feat. 24kGoldn)", "closer", "wishing_on_you", "don't_wanna_go_back(Duet with Heize)", "room", "nightmare"],
+    ["i_got_you"],
+    ["one_spark", "i_got_you", "rush", "new_new", "bloom", "you_get_me"]
+];
+
+
 // This is a 2D array of strings (Contains columns as item 0)
 // From item 1 and onward it looks like : [[*Album_Name*, *Year_released*_...],...]
 const data2DArray = csvData.split('\n').map(row => row.split(','));
-let objectArray = createAlbumsArray(data2DArray);
+let objectArray = createAlbumsArray(data2DArray, tracklistData);
 const albumArray = formatAlbumData(objectArray);
 
                         /** END   OF  VARIABLE/DATA   DECLARATIONS**/ 
@@ -148,12 +178,13 @@ const albumArray = formatAlbumData(objectArray);
 // These first functions are ones I wrote to help me manipulate data/create my objects
 
 // Will instantiate objects and remove the column data from csv
-function createAlbumsArray(discographyData)
+function createAlbumsArray(discographyData, tracklistData)
 {
     rows = discographyData.length;
     columns = discographyData[0].length;
     let albumObjects = [];
-
+    let j = 0;
+    // This will start one ahead to get rid of column in csv file
     for (let i = 1; i < rows; i++)
     {
         let singleCheck = discographyData[i][4]; // checks for if the album is a single (single col is 4)
@@ -163,9 +194,11 @@ function createAlbumsArray(discographyData)
 
         // Fill the album instance with data from discographyData
         currentAlbum.create_from_array(discographyData[i]);
+        currentAlbum.setTracklist(tracklistData[j]);
     
         // Push the filled album instance into the albums array
         albumObjects.push(currentAlbum);
+        j++;
     }
 
 
@@ -183,6 +216,10 @@ function formatAlbumData(unformattedAlbumArray)
         let selectedAlbum = unformattedAlbumArray[i];
         unformattedAlbumArray[i].album_name = fixString(selectedAlbum.album_name);
         unformattedAlbumArray[i].title_track = fixString(selectedAlbum.title_track);
+        for (let j = 0; j < selectedAlbum.tracklist.length; j++)
+        {
+            selectedAlbum.tracklist[j] = fixString(selectedAlbum.tracklist[j]); 
+        }
     }
 
     return unformattedAlbumArray;
@@ -217,9 +254,6 @@ function fixString(myString)
             }
             i++;
         }
-
-        console.log(myString);
-        console.log(posArray);
 
         // Checks array of underscore positions and capitalizes the next character if its a letter
         if (posArray.length > 0)
@@ -304,7 +338,7 @@ function editCardContent(card, newTitle, newImageURL) {
         // Will also call the functions here
 // This calls the addCards() function when the page is first loaded
 document.addEventListener("DOMContentLoaded", showCards);
-
+console.log(albumArray);
 
 
 function quoteAlert() {
