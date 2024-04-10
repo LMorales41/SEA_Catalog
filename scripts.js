@@ -436,6 +436,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const excludeSinglesCheckbox = document.getElementById('exclude-singles');
     const dropdown = document.getElementById('sorting-dropdown');
     const myButton = document.getElementById('myButton');
+    const searchBar = document.getElementById('search-bar');
+    searchBar.addEventListener('input', updateFilteredArray);
 
     // Add event listeners
     onlySolosCheckbox.addEventListener('change', updateFilteredArray);
@@ -476,7 +478,15 @@ document.addEventListener("DOMContentLoaded", function() {
         if (selectedYear !== 'all') {
             albumArrayCopy = albumArrayCopy.filter(album => album.year_released === selectedYear);
         }
-    
+
+        let searchQuery = searchBar.value.trim(); // deal with any whitespace
+
+        if (searchQuery) {
+            albumArrayCopy = albumArrayCopy.filter(album => 
+                album.album_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                album.tracklist.some(track => track.toLowerCase().includes(searchQuery.toLowerCase()))
+            );
+        }
         // Call showCards again to refresh with the updated albumArrayCopy
         
         showCards();
