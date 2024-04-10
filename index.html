@@ -12,18 +12,21 @@
     <header class="main-header">
         <h1 class="title">TWICE Discography</h1>
     </header>
-    <div class="sorting-tools">
-        <input type="text" class="search-bar" placeholder="Search...">
-        <select id="sorting-dropdown">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
-        <button class="action-button">Click Me</button>
-        <input type="checkbox" id="myCheckbox" name="myCheckbox">
-        <label for="myCheckbox">Nayeon</label>
-        <input type="checkbox" id="myCheckbox" name="myCheckbox2">
-        <label for="myCheckbox2">Jihyo</label>
+    <div id = "sorting-container">
+        <div class="sorting-tools">
+            <button id="myButton">Random Song!</button>
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search songs...">
+            <select id="sorting-dropdown">
+            </select>
+            <input type="checkbox" id="only-solos" name="only-solos">
+            <label for="only-solos">Only show solos</label>
+            <input type="checkbox" id="only-singles" name="only-singles">
+            <label for="only-singles">Only show singles</label>
+            <input type="checkbox" id="exclude-solos" name="exclude-solos">
+            <label for="exclude-solos">Exclude solos</label>
+            <input type="checkbox" id="exclude-singles" name="exclude-singles">
+            <label for="exclude-singles">Exclude singles</label>
+            </div>
         </div>
     <div id="card-container">
     </div>
@@ -36,12 +39,6 @@
         </div>
     </div>
     <div class="footer">
-        <button onclick="quoteAlert();">
-            Get A Quote!
-        </button>
-        <button onclick="removeLastCard();">
-            Remove A Card!
-        </button>
     </div>
 </body>
 

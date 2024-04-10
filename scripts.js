@@ -1,29 +1,3 @@
-/**
- * Data Catalog Project Starter Code - SEA Stage 2
- *
- * This file is where you should be doing most of your work. You should
- * also make changes to the HTML and CSS files, but we want you to prioritize
- * demonstrating your understanding of data structures, and you'll do that
- * with the JavaScript code you write in this file.
- * 
- * The comments in this file are only to help you learn how the starter code
- * works. The instructions for the project are in the README. That said, here
- * are the three things you should do first to learn about the starter code:
- * - 1 - Change something small in index.html or style.css, then reload your 
- *    browser and make sure you can see that change. 
- * - 2 - On your browser, right click anywhere on the page and select
- *    "Inspect" to open the browser developer tools. Then, go to the "console"
- *    tab in the new window that opened up. This console is where you will see
- *    JavaScript errors and logs, which is extremely helpful for debugging.
- *    (These instructions assume you're using Chrome, opening developer tools
- *    may be different on other browsers. We suggest using Chrome.)
- * - 3 - Add another string to the titles array a few lines down. Reload your
- *    browser and observe what happens. You should see a fourth "card" appear
- *    with the string you added to the array, but a broken image.
- * 
- */
-
-
                             /** START OF CLASS DECLARATIONS **/
 // Album class to abstract away each array containing an Album's data into an object
 // Will contain all data for each album, contains data for soloist as well as there are only 2 soloists.
@@ -42,6 +16,7 @@ class Album
         this.title_track = "";
         this.soloist = "";
         this.tracklist = [];
+        this.imageUrl = "";
     }
 
     //instead fill all variables with the given columns(arrays) from the 2d array
@@ -70,6 +45,11 @@ class Album
     setTracklist(array)
     {
         this.tracklist = array;
+    }
+
+    setImage(link)
+    {
+        this.imageUrl = link;
     }
 }
                         /** END OF CLASS DECLARATIONS **/
@@ -171,6 +151,9 @@ const data2DArray = csvData.split('\n').map(row => row.split(','));
 let objectArray = createAlbumsArray(data2DArray, tracklistData);
 const albumArray = formatAlbumData(objectArray);
 
+// We work with this array to make everything dynamic happy while allowing us to reset to an everything state
+let albumArrayCopy = albumArray;
+
 
                         /** END   OF  VARIABLE/DATA   DECLARATIONS**/ 
 
@@ -184,6 +167,9 @@ function createAlbumsArray(discographyData, tracklistData)
     rows = discographyData.length;
     columns = discographyData[0].length;
     let albumObjects = [];
+
+    // ARRAY WILL BE OFF BY ONE USE J
+    // This gets rid of the columns array in csv file with least workarounds
     let j = 0;
     // This will start one ahead to get rid of column in csv file
     for (let i = 1; i < rows; i++)
@@ -196,6 +182,7 @@ function createAlbumsArray(discographyData, tracklistData)
         // Fill the album instance with data from discographyData
         currentAlbum.create_from_array(discographyData[i]);
         currentAlbum.setTracklist(tracklistData[j]);
+        currentAlbum.setImage(albumUrls[j]);
     
         // Push the filled album instance into the albums array
         albumObjects.push(currentAlbum);
@@ -302,12 +289,10 @@ function showCards() {
     cardContainer.innerHTML = "";
     const templateCard = document.querySelector(".card");
     
-    for (let i = 0; i < albumArray.length; i++){
-        let selectedAlbum = albumArray[i];
-        let imageURL = albumUrls[i];
-
+    for (let i = 0; i < albumArrayCopy.length; i++){
+        let selectedAlbum = albumArrayCopy[i];
         const nextCard = templateCard.cloneNode(true); // Copy the template card
-        editCardContent(nextCard, selectedAlbum.album_name, imageURL); // Edit title and image
+        editCardContent(nextCard, selectedAlbum.album_name, selectedAlbum.imageUrl); // Edit title and image
 
 
         let cardHeight = document.querySelector('.card').height;
@@ -316,6 +301,14 @@ function showCards() {
         
         cardContainer.appendChild(nextCard); // Add new card to the container
     }
+}
+
+function sortingTools()
+{
+    const dropdown = document.getElementById('sorting-dropdown');
+    dropdown.innerHTML = "";
+    generateDropdownYears(dropdown, albumArrayCopy);
+
 }
 
 function editCardContent(card, newTitle, newImageURL) {
@@ -334,6 +327,37 @@ function editCardContent(card, newTitle, newImageURL) {
     // console.log("new card:", newTitle, "- html: ", card);
     
 }
+
+function grabYears (shownAlbums)
+{
+    let years = new Set();
+    years.add("all");
+    //console.log(shownAlbums);
+    for (let i = 0; i < shownAlbums.length; i++)
+    {
+        //console.log(shownAlbums[i].year_released);
+        years.add(shownAlbums[i].year_released);
+    }
+    //console.log(years)
+    return years;
+}
+
+
+function createDropdownOptions(optionsData) {
+    const dropdown = document.getElementById("sorting-dropdown");
+
+    // Clear existing options
+    dropdown.innerHTML = "";
+
+    // Create options dynamically based on the data
+    optionsData.forEach(option => {
+        const optionElement = document.createElement("option");
+        optionElement.value = option.toLowerCase().replace(/\s/g, "_"); // Convert option text to lowercase with underscores
+        optionElement.textContent = option;
+        dropdown.appendChild(optionElement);
+    });
+}
+
 
 // Function to generate bullet points
 function generateBulletPoints(card, tracklist, cardHeight) {
@@ -399,71 +423,96 @@ function generateBulletPoints(card, tracklist, cardHeight) {
                             /** END   OF  DISPLAY   FUNCTIONS**/ 
 
                             /** START   OF  FUNCTIONIONALITY (ex getQuote)  FUNCTIONS**/ 
-        // Will also call the functions here
-// This calls the addCards() function when the page is first loaded
-document.addEventListener("DOMContentLoaded", showCards);
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    showCards();
+    createDropdownOptions(grabYears(albumArrayCopy));
+    
+
+    const onlySolosCheckbox = document.getElementById('only-solos');
+    const onlySinglesCheckbox = document.getElementById('only-singles');
+    const excludeSolosCheckbox = document.getElementById('exclude-solos');
+    const excludeSinglesCheckbox = document.getElementById('exclude-singles');
+    const dropdown = document.getElementById('sorting-dropdown');
+    const myButton = document.getElementById('myButton');
+
+    // Add event listeners
+    onlySolosCheckbox.addEventListener('change', updateFilteredArray);
+    onlySinglesCheckbox.addEventListener('change', updateFilteredArray);
+    excludeSolosCheckbox.addEventListener('change', updateFilteredArray);
+    excludeSinglesCheckbox.addEventListener('change', updateFilteredArray);
+    dropdown.addEventListener('change', updateFilteredArray);
+    myButton.addEventListener('click', randSong);
+
+    function updateFilteredArray() {
+        // Reset albumArrayCopy to the original albumArray if all checkboxes are unchecked
+        if (!onlySolosCheckbox.checked && !onlySinglesCheckbox.checked && !excludeSolosCheckbox.checked && !excludeSinglesCheckbox.checked) {
+            albumArrayCopy = albumArray.slice();
+        } else {
+            // Otherwise, apply filters based on checkbox state
+            albumArrayCopy = albumArray.slice();
+    
+            if (onlySolosCheckbox.checked) {
+                albumArrayCopy = albumArrayCopy.filter(album => album.solo === 'true');
+            }
+    
+            if (onlySinglesCheckbox.checked) {
+                albumArrayCopy = albumArrayCopy.filter(album => album.single === 'true');
+            }
+    
+            if (excludeSolosCheckbox.checked) {
+                albumArrayCopy = albumArrayCopy.filter(album => album.solo === 'false');
+            }
+    
+            if (excludeSinglesCheckbox.checked) {
+                albumArrayCopy = albumArrayCopy.filter(album => album.single === 'false');
+            }
+        }
+        // Get the selected year from the dropdown
+        let selectedYear = dropdown.value;
+
+        // Filter albums based on the selected year
+        if (selectedYear !== 'all') {
+            albumArrayCopy = albumArrayCopy.filter(album => album.year_released === selectedYear);
+        }
+    
+        // Call showCards again to refresh with the updated albumArrayCopy
+        
+        showCards();
+    }
+});
 
 
 
 
-function quoteAlert() {
-    console.log("Button Clicked!")
-    alert("I guess I can kiss heaven goodbye, because it got to be a sin to look this good!");
+function randSong() {
+    let max = albumArrayCopy.length;
+    if (max === 0)
+    {
+        alert("There are no songs!");
+    }
+    let albumChosen = albumArrayCopy[getRandomInt(0, max)];
+    max = albumChosen.tracklist.length;
+    let song = albumChosen.tracklist[getRandomInt(0, max)];
+    alert(song);
 }
 
-function removeLastCard() {
+function removeLastCard() 
+{
     titles.pop(); // Remove last item in titles array
     showCards(); // Call showCards again to refresh
 }
 
-
-function redirectToNewPage(data) {
-    // Redirect to a new page with dynamic data
-    window.location.href = 'newpage.html?data=' + data;
+function getRandomInt(min, max) 
+{
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateCardHTML(album) {
-    // Generate HTML content for the new page based on the album data
-    let htmlContent = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>${album.album_name}</title>
-            <link rel="stylesheet" href="style.css">
-        </head>
-        <body>
-            <h1>${album.album_name}</h1>
-            <img src="${album.album_image}" alt="${album.album_name}">
-            <h2>Tracklist</h2>
-            <ul>
-    `;
 
-    // Add each track to the tracklist
-    album.tracklist.forEach(track => {
-        htmlContent += `<li>${track}</li>`;
-    });
-
-    // Close the HTML content
-    htmlContent += `
-            </ul>
-        </body>
-        </html>
-    `;
-
-    return htmlContent;
-}
-
-function createHTMLPage(content) {
-    // Create a new HTML element
-    const pageContainer = document.createElement('div');
-
-    // Set the innerHTML of the element to the generated HTML content
-    pageContainer.innerHTML = content;
-
-    // Append the element to the document body
-    document.body.appendChild(pageContainer);
+function search(searchInput)
+{
+    
 }
 
 
