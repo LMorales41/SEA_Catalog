@@ -124,3 +124,10 @@ button {
     cursor: pointer;
     margin: 5px;
 }
+
+/* Specific breakpoint for title */
+@media only screen and (max-width: 1070px){
+    .title {
+        font-size: 10em;
+    }
+} 
